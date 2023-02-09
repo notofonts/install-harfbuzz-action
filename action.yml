@@ -7,10 +7,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Ccache
-      uses: hendrikmuhs/ccache-action@v1.2
-      with:
-        key: ${{ github.job }}-${{ runner.os }}-${{ runner.arch }}
     - name: Prepare
       shell: bash
       run: |
@@ -32,17 +28,6 @@ runs:
     - name: Install Python Dependencies
       shell: bash
       run: sudo pip3 install fonttools meson==0.56.0 gcovr==5.0
-    - name: Setup Meson
-      shell: bash
-      run: |
-        ccache --version
-        meson setup build \
-          -Dauto_features=enabled \
-          -Dchafa=disabled \
-          -Dgraphite=enabled \
-          -Doptimization=2 \
-          -Db_coverage=true \
-          -Dragel_subproject=true
     - name: Download
       shell: bash
       run: wget https://github.com/harfbuzz/harfbuzz/archive/refs/tags/${{inputs.release}}.zip
