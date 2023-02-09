@@ -7,6 +7,10 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup Ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ github.job }}-${{ runner.os }}-${{ runner.arch }}
     - name: Prepare
       shell: bash
       run: |
