@@ -52,4 +52,5 @@ runs:
           -Dragel_subproject=true
         meson compile -Cbuild
         sudo meson install -Cbuild
+        sudo ldconfig
 
