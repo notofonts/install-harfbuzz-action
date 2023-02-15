@@ -3,7 +3,7 @@ inputs:
   release:
     description: "Harfbuzz release"
     required: false
-    default: "6.0.0"
+    default: "7.0.0"
 runs:
   using: "composite"
   steps:
