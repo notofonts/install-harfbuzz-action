@@ -7,6 +7,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup harfbuzz cache
+      id: cache-harfbuzz
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: harfbuzz-${{inputs.release}}
+        key: harfbuzz-${{inputs.release}}
     - name: Setup Ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
@@ -32,13 +40,14 @@ runs:
     - name: Install Python Dependencies
       shell: bash
       run: sudo pip3 install fonttools meson==0.56.0 gcovr==5.0
-    - name: Download
+    - name: Download and unzip
+      if: ${{ steps.cache-harfbuzz.outputs.cache-hit != 'true' }}
       shell: bash
-      run: wget https://github.com/harfbuzz/harfbuzz/archive/refs/tags/${{inputs.release}}.zip
-    - name: Unzip
-      shell: bash
-      run: unzip ${{inputs.release}}.zip
+      run: |
+        wget https://github.com/harfbuzz/harfbuzz/archive/refs/tags/${{inputs.release}}.zip
+        run: unzip ${{inputs.release}}.zip
     - name: Build
+      if: ${{ steps.cache-harfbuzz.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
         cd harfbuzz-${{inputs.release}}
@@ -51,6 +60,10 @@ runs:
           -Db_coverage=true \
           -Dragel_subproject=true
         meson compile -Cbuild
+    - name: Build
+      shell: bash
+      run: |
+        cd harfbuzz-${{inputs.release}}
         sudo meson install -Cbuild
         sudo ldconfig
 
