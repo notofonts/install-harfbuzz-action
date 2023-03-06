@@ -45,7 +45,7 @@ runs:
       shell: bash
       run: |
         wget https://github.com/harfbuzz/harfbuzz/archive/refs/tags/${{inputs.release}}.zip
-        run: unzip ${{inputs.release}}.zip
+        unzip ${{inputs.release}}.zip
     - name: Build
       if: ${{ steps.cache-harfbuzz.outputs.cache-hit != 'true' }}
       shell: bash
